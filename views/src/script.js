@@ -1,3 +1,5 @@
+import "../../node_modules/bootstrap/dist/js/bootstrap";
+
 var x = document.getElementById("demo");
 var latitude = "";
 var longitude = "";
