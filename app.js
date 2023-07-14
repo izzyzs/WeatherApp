@@ -44,11 +44,22 @@ app.get("/", async function (req, res) {
     console.log(url);
 
     https.get(url, function (response) {
-        response.on("data", function (data) {
-            const weatherData = JSON.parse(data);
+        let data = "";
+        response.on("data", function (chunk) {
             // const city = weatherData.city.name;
             // res.render("index", { dayOne: data });
-            // console.log(weatherData);
+
+            data += chunk;
+        });
+        response.on("end", function () {
+            try {
+                const weatherData = JSON.parse(data);
+                console.log(weatherData);
+                // Handle the parsed JSON data
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                // Handle the error appropriately
+            }
         });
     });
 });
