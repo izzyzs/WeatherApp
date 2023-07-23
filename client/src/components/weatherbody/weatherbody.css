@@ -1,0 +1,42 @@
+.weather-body {
+    background: linear-gradient(0.6turn, var(--light-sea-green), var(--dark-slate-gray), var(--gunmetal));
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: [col1-start] 1fr [col1-end col2-start] 1fr [col2-end col3-start] 1fr [col3-end col4-start] 1fr [col4-end];
+    grid-template-rows: [row1-start] 1fr [row1-end row2-start] 1fr [row2-end row3-start] 5vh [row3-end row4-start] 5vh [row4-end row5-start] 5vh [row5-end row6-start] 5vh [row6-end];
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    transition: max-height 0.2s;
+    grid-column: 1 / 4;
+}
+
+.weather-body > * {
+    align-self: end;
+    padding: 10px;
+    border-left: 5px teal solid;
+}
+
+.title {
+    display: inline-block;
+    text-align: left;
+    font-size: max(40px, 5vw);
+    padding: 0 7.5px 15px 7.5px;
+    font-family: var(--raleway);
+    font-weight: 800;
+    margin: 0;
+}
+
+#day {
+    font-size: clamp(2em, 4vw, 3em);
+}
+
+.special {
+    grid-column: col2-start / col4-end;
+    justify-self: left;
+    font-size: clamp(1.25em, 3.5vw, 1.875em);
+}
+
+.sky-description {
+    align-self: center;
+}

@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import DaySection from "./daysection/DaySection";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [weatherData, setWeatherData] = useState([{}]);
+
+    useEffect(function () {
+        fetch("/api/weather")
+            .then((response) => response.json())
+            .then((data) => setWeatherData(data))
+            .catch((error) => console.error("Error fetching data:", error));
+    });
+
+    return (
+        <>
+            <h1 className="title">Weather App</h1>
+            <form className="city-search" action="/by-city" method="post">
+                <input type="text" placeholder="Enter City" />
+                <button type="submit">Submit</button>
+            </form>
+            <DaySection />
+            <DaySection />
+            <DaySection />
+            <DaySection />
+            <DaySection />
+            <div>{JSON.stringify(weatherData)}</div>
+        </>
+    );
 }
 
 export default App;

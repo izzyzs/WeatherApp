@@ -4,7 +4,7 @@ const express = require("express");
 const https = require("https");
 const { send } = require("process");
 const axios = require("axios");
-const { log, error: consoleError } = require("console");
+const cors = require("cors");
 const app = express();
 
 const port = process.env.PORT || 4000;
@@ -17,11 +17,12 @@ const DateClass = require("./models/DateClass");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("./public"));
+app.use(cors());
 
 // ipinfo.io/67.84.10.48?token=fb29c5778c241
 // https://ipinfo.io/${ipAddress}?token=${ipinfoToken}
 
-app.get("/", async function (req, res) {
+app.get("/api/weather", async function (req, res) {
     var lat;
     var lon;
     let ipAddress;
@@ -36,13 +37,13 @@ app.get("/", async function (req, res) {
         lat = locationDetails[0];
         lon = locationDetails[1];
     } catch (error) {
-        error("Error:", error);
+        console.error("Error:", error);
     }
 
     // console.log(lat, lon);
 
     const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.API_KEY}`;
-    log(url);
+    console.log(url);
 
     https.get(url, function (response) {
         let data = "";
@@ -53,18 +54,13 @@ app.get("/", async function (req, res) {
         });
         response.on("end", function () {
             try {
-                var days = [];
                 const weatherData = JSON.parse(data);
 
                 // Handle the parsed JSON data
-                for (var i = 0; i < weatherData.list.length; i++) {
-                    let aDate = new DateClass(weatherData.list[i].dt);
-                    let v = aDate.day() + aDate.theDate();
-                    days.push(v);
-                }
-                res.render("index", { days: days });
+                console.log(weatherData.list);
+                res.json(weatherData.list);
             } catch (error) {
-                consoleError("Error parsing JSON:", error);
+                console.error("Error parsing JSON:", error);
                 // Handle the error appropriately
             }
         });
