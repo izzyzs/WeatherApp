@@ -39,3 +39,23 @@ input[type="text"] {
 input[type="text"]:focus {
     outline: 2px var(--light-sky-blue) solid;
 }
+
+@media (min-width: 1200px) {
+    body {
+        grid-template-columns: 0.25fr 1fr 1fr 1fr 0.25fr;
+    }
+
+    .city-search {
+        grid-column: -3 / -1;
+    }
+}
+
+@media (max-width: 650px) {
+    body {
+        text-align: center;
+    }
+
+    .city-search {
+        display: inline-block;
+    }
+}

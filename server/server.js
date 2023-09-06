@@ -16,7 +16,6 @@ const DateClass = require("./models/DateClass");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("./public"));
 app.use(cors());
 
 // ipinfo.io/67.84.10.48?token=fb29c5778c241
@@ -42,7 +41,7 @@ app.get("/api/weather", async function (req, res) {
 
     // console.log(lat, lon);
 
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.API_KEY}`;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.API_KEY}&units=imperial`;
     console.log(url);
 
     https.get(url, function (response) {
@@ -55,10 +54,45 @@ app.get("/api/weather", async function (req, res) {
         response.on("end", function () {
             try {
                 const weatherData = JSON.parse(data);
+                const weatherDataListLength = weatherData.list.length;
 
                 // Handle the parsed JSON data
-                console.log(weatherData.list);
-                res.json(weatherData.list);
+                let weatherDataHash = {};
+                let weatherDataList = [];
+                for (let i = 0; i < weatherDataListLength; i++) {
+                    let currentObjDate = new DateClass(weatherData.list[i].dt);
+                    longDate = currentObjDate.getLongDate;
+                    weatherData.list[i]["longDate"] = longDate;
+
+                    let dateInfo = {
+                        date: currentObjDate.theDate,
+                        day: currentObjDate.day,
+                        hour: currentObjDate.hour,
+                        month: currentObjDate.month,
+                        year: currentObjDate.year,
+                    };
+                    weatherData.list[i]["dateInfo"] = dateInfo;
+
+                    const description = weatherData.list[i].weather[0].description;
+                    const descriptionUppercase = description.replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase());
+                    weatherData.list[i].weather[0].description = descriptionUppercase;
+
+                    if (!weatherDataHash.hasOwnProperty(longDate)) {
+                        weatherDataHash[longDate] = [weatherData.list[i]];
+                    } else {
+                        weatherDataHash[longDate].push(weatherData.list[i]);
+                    }
+
+                    // weatherDataList.push(weatherData.list[i].dt);
+                    // weatherDataList.push(longDate);
+                    // weatherDataList.push(weatherDataListLength);
+                }
+                // res.json(weatherDataHash);
+                // weatherDataList = weatherData.list;
+                // const weatherDataJson = weatherData.list;
+                weatherDataList = Object.values(weatherDataHash);
+                const weatherDataJson = { list: weatherDataList };
+                res.json(weatherDataJson);
             } catch (error) {
                 console.error("Error parsing JSON:", error);
                 // Handle the error appropriately

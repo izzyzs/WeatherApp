@@ -14,7 +14,7 @@
 }
 
 .collapsible:hover,
-.active {
+.active_daybutton {
     background-image: linear-gradient(0.3turn, var(--purplish-blue), var(--dark-violet), var(--deep-purple));
 }
 
@@ -24,7 +24,7 @@
     transform: scale(1.7);
 }
 
-.active::after {
+.active_daybutton::after {
     content: "\25b4";
     float: right;
     transform: scale(1.7);

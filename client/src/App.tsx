@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import DaySection from "./daysection/DaySection";
 import "./App.css";
+import { ListItemInterface } from "./ListItemInterface";
+
+interface WeatherData {
+    list: Array<Array<ListItemInterface>>;
+}
 
 function App() {
-    const [weatherData, setWeatherData] = useState([{}]);
+    const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
 
     useEffect(function () {
         fetch("/api/weather")
             .then((response) => response.json())
             .then((data) => setWeatherData(data))
             .catch((error) => console.error("Error fetching data:", error));
-    });
+    }, []);
 
     return (
         <>
@@ -19,12 +24,19 @@ function App() {
                 <input type="text" placeholder="Enter City" />
                 <button type="submit">Submit</button>
             </form>
-            <DaySection />
-            <DaySection />
-            <DaySection />
-            <DaySection />
-            <DaySection />
-            <div>{JSON.stringify(weatherData)}</div>
+            {weatherData ? (
+                <div>
+                    {weatherData.list.map((item, index) => (
+                        <div key={index}>
+                            <DaySection dayButtonChildren={item[0].longDate} weatherBodyContentData={item} />
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                // <div>{JSON.stringify(weatherData)}</div>
+                <p>Loading weather data...</p>
+            )}
+            {/* <div>{JSON.stringify(weatherData)}</div> */}
         </>
     );
 }
