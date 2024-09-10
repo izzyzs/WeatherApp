@@ -21,3 +21,8 @@
 html {
     height: 100vh;
 }
+
+body.modal_open {
+    overflow: hidden;
+    padding-right: 0px;
+}
