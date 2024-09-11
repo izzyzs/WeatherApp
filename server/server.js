@@ -18,9 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-// ipinfo.io/67.84.10.48?token=fb29c5778c241
-// https://ipinfo.io/${ipAddress}?token=${ipinfoToken}
-
 app.get("/api/weather", async function (req, res) {
     var lat;
     var lon;
